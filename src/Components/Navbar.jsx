@@ -17,14 +17,18 @@ const Navbar = () => {
   };
   return (
     <div className="flex justify-between items-center">
-      <div className="w-4/12">{user && user.email}</div>
+      <div className="w-4/12">{user && user.displayName}</div>
       <div className="flex justify-center gap-5 text-accent-content w-4/12">
         <NavLink to={"/"}>Home</NavLink>
         <NavLink to={"/about"}>About</NavLink>
         <NavLink to={"/career"}>Career</NavLink>
       </div>
       <div className="flex gap-3 w-4/12 justify-end">
-        <img src={avatar} alt="" />
+        <img
+          className="w-11 h-11 rounded-full"
+          src={`${user ? user.photoURL : avatar}`}
+          alt=""
+        />
         {user ? (
           <button onClick={handleSignout} className="btn btn-primary px-8">
             Logout

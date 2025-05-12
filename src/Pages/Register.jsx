@@ -1,9 +1,10 @@
 import React, { use } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../Provider/AuthProvider";
 
 const Register = () => {
-  const { createUser, setUser } = use(AuthContext);
+  const { createUser, setUser, updateUser } = use(AuthContext);
+  const navigate = useNavigate();
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -16,13 +17,20 @@ const Register = () => {
     createUser(email, password)
       .then((result) => {
         const user = result.user;
-        setUser(user);
-        // console.log(user);
+        updateUser({ displayName: name, photoURL: photo })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: photo });
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error);
+            setUser(user);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert(errorMessage);
+        // alert(errorMessage);
       });
   };
   return (
@@ -40,6 +48,7 @@ const Register = () => {
               type="text"
               className="input"
               placeholder="Name"
+              required
             />
             {/* photo url  */}
             <label className="label font-bold text-accent">Photo Url</label>
@@ -56,6 +65,7 @@ const Register = () => {
               type="email"
               className="input"
               placeholder="Email"
+              required
             />
             {/* password  */}
             <label className="label font-bold text-accent">Password</label>
@@ -64,6 +74,7 @@ const Register = () => {
               type="password"
               className="input"
               placeholder="Password"
+              required
             />
             <button type="submit" className="btn btn-neutral mt-4">
               Register
